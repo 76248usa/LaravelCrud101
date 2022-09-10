@@ -93,4 +93,11 @@ Route::get('/contact/edit/{id}', [ContactController::class, 'EditContact']);
 Route::post('/contact/update/{id}', [ContactController::class, 'UpdateContact']);
 Route::get('/contact/delete/{id}', [ContactController::class, 'DeleteContact']);
 //Contact on Home Page
-Route::get('/contacts',[ContactController::class, 'HomeContact'])->name('contacts');
+//Route::get('/contacts',[ContactController::class, 'HomeContact'])->name('contacts');
+Route::get('/contacts', function () {
+    $contact = DB::table('contacts')->first();
+    return view('layouts.pages.contact', compact('contact'));
+});
+Route::post('contactform', [ContactController::class, 'StoreForm']);
+Route::get('admin/message', [ContactController::class, 'AdminMessage'])->name('admin.message');
+Route::get('message/delete/{id}', [ContactController::class, 'DeleteMessage']);

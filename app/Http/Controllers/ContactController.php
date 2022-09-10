@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use App\Models\ContactForm;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
@@ -22,7 +23,7 @@ class ContactController extends Controller
             'phone' => 'required'
         ]);
 
-        DB::table('contacts')->insert([
+        DB::table('contact_forms')->insert([
             'address' => $request->address,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -55,7 +56,30 @@ class ContactController extends Controller
     }
 
     public function HomeContact(){
-
+        return view('layouts.pages.contact');
     }
+
+    public function StoreForm(Request $request){
+
+        ContactForm::insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'message' => $request->message,
+            'subject' => $request->subject
+        ]);
+
+        return redirect()->route('contactform')->with('success','Added successfully');
+    }
+
+    public function AdminMessage(){
+        $messages = ContactForm::all();
+        return view('admin.contact.message', (compact('messages')));
+    }
+
+    public function DeleteMessage($id){
+        $message = ContactForm::find($id)->delete();
+        return redirect()->back()->with('success','Deleted successfully');
+    }
+
 
 }
